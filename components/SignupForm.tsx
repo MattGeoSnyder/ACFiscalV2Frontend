@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { DepartmentSelect } from "@/components/ui/departmentSelect";
 import { FormDescription } from "./ui/form";
-import { signup } from "@/actions/actions";
+import { signup, login } from "@/actions/actions";
 
 export function SignupForm() {
 	const signupSchema = z
