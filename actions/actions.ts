@@ -1,8 +1,12 @@
 "use server";
 import { API_BASE_URL } from "@/app/constants";
 import { assert } from "console";
+import { RedirectType, redirect } from "next/navigation";
 
-export async function signup(formData: FormData) {
+export async function signup(
+	prevState: any,
+	formData: FormData
+) {
 	const [first_name, last_name] = (
 		formData.get("name") as string
 	)?.split(" ");
@@ -21,9 +25,8 @@ export async function signup(formData: FormData) {
 			},
 			body: reqBody,
 		});
-		const result = await res.json();
-		console.log(result);
-		return result;
+
+		return res.json();
 	} catch (e) {
 		console.log(e);
 	}

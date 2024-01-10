@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { DepartmentSelect } from "@/components/ui/departmentSelect";
 import { FormDescription } from "./ui/form";
 import { signup, login } from "@/actions/actions";
+import { useFormState } from "react-dom";
+import { FormButton } from "@/components/ui/formButton";
+import { RedirectType, redirect } from "next/navigation";
 
 export function SignupForm() {
 	const signupSchema = z
@@ -35,10 +38,27 @@ export function SignupForm() {
 		resolver: zodResolver(signupSchema),
 	});
 
+	const errorMsg = {
+		errorMessage: "",
+	};
+
+	const [state, formAction] = useFormState(
+		signup,
+		errorMsg
+	);
+
+	const signupAction = async (formData: FormData) => {
+		formAction(formData);
+		console.log(state);
+		if (state.token) {
+			redirect("/ach", RedirectType.replace);
+		}
+	};
+
 	return (
 		<form
 			className='flex flex-col justify-evenly w-content h-2/3 p-10 border border-gray-200 rounded-xl'
-			action={signup}>
+			action={signupAction}>
 			<div>
 				<Label>Department</Label>
 				<DepartmentSelect
@@ -75,7 +95,7 @@ export function SignupForm() {
 					placeholder='Confirm Password'
 				/>
 			</div>
-			<Button className='w-fit self-center'>Sign up</Button>
+			<FormButton className='w-fit self-center' />
 		</form>
 	);
 }
