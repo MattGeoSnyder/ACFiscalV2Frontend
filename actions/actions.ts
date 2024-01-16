@@ -32,7 +32,10 @@ export async function signup(
 	}
 }
 
-export async function login(formData: FormData) {
+export async function login(
+	prevState: any,
+	formData: FormData
+) {
 	try {
 		const tokenRes = await fetch(`${API_BASE_URL}/token`, {
 			method: "POST",
