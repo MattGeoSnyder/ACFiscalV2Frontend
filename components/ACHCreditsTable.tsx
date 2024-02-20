@@ -22,6 +22,7 @@ export default async function ACHCreditsTable({
 		<Table>
 			<TableHeader>
 				<TableRow>
+					<TableHead>Claim</TableHead>
 					<TableHead>Received</TableHead>
 					<TableHead>Fund</TableHead>
 					<TableHead>Amount</TableHead>

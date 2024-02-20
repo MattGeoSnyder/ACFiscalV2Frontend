@@ -48,7 +48,9 @@ export function DepartmentSelect({
 				<SelectGroup>
 					<SelectLabel>Departments</SelectLabel>
 					{departments.map((department) => (
-						<SelectItem value={`${department.id}`}>
+						<SelectItem
+							key={department.id}
+							value={`${department.id}`}>
 							{department.name}
 						</SelectItem>
 					))}

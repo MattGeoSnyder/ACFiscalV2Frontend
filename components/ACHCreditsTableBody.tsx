@@ -4,6 +4,7 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export async function ACHCreditsTableBody({
 	params,
@@ -33,6 +34,9 @@ export async function ACHCreditsTableBody({
 		<TableBody>
 			{credits.ach_credits.map((credit: Credit) => (
 				<TableRow>
+					<TableCell>
+						<Checkbox className='self-center'></Checkbox>
+					</TableCell>
 					<TableCell>
 						{new Date(credit.received).toDateString()}
 					</TableCell>
