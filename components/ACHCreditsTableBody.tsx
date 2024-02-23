@@ -1,3 +1,5 @@
+"use client";
+
 import { API_BASE_URL } from "@/app/constants";
 import {
 	TableBody,
@@ -5,48 +7,61 @@ import {
 	TableCell,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { SetStateAction, Suspense } from "react";
+import { ACHCreditsTableBodyLoading } from "./ACHCreditsTableBodyLoading";
+import { ACHCredit } from "@/app/types";
 
 export async function ACHCreditsTableBody({
-	params,
+	credits,
+	setClaimed,
 }: {
-	params: URLSearchParams;
+	credits: ACHCredit[];
+	setClaimed: React.Dispatch<SetStateAction<ACHCredit[]>>;
 }) {
-	type Credit = {
-		id: number;
-		received: string;
-		fund: number;
-		amount_in_cents: number;
-		description: string;
-	};
-
-	const res: any = await fetch(
-		`${API_BASE_URL}/ach?outstanding=true&limit=10&${params.toString()}`
-	);
-	const credits: { ach_credits: Credit[] } =
-		await res.json();
-
 	const formatter = new Intl.NumberFormat("en-US", {
 		style: "currency",
 		currency: "USD",
 	});
 
+	const handleChange = (
+		e: React.ChangeEvent<HTMLInputElement>,
+		credit: ACHCredit
+	) => {
+		setClaimed((claimed) => {
+			if (!e.) return claimed;
+
+			for (let c of claimed) {
+				if (c.id === credit.id) return claimed;
+			}
+			return [...claimed, credit];
+		});
+	};
+
 	return (
-		<TableBody>
-			{credits.ach_credits.map((credit: Credit) => (
-				<TableRow>
-					<TableCell>
-						<Checkbox className='self-center'></Checkbox>
-					</TableCell>
-					<TableCell>
-						{new Date(credit.received).toDateString()}
-					</TableCell>
-					<TableCell>{credit.fund}</TableCell>
-					<TableCell>
-						{formatter.format(credit.amount_in_cents / 100)}
-					</TableCell>
-					<TableCell>{credit.description}</TableCell>
-				</TableRow>
-			))}
-		</TableBody>
+		<Suspense fallback={<ACHCreditsTableBodyLoading />}>
+			<TableBody>
+				{credits.map((credit: ACHCredit) => (
+					<TableRow>
+						<TableCell>
+							<Checkbox
+								className='self-center'
+								onChange={(e) => {
+									handleChange(e, credit);
+								}}></Checkbox>
+						</TableCell>
+						<TableCell>
+							{new Date(credit.received).toDateString()}
+						</TableCell>
+						<TableCell>{credit.fund}</TableCell>
+						<TableCell>
+							{formatter.format(
+								credit.amount_in_cents / 100
+							)}
+						</TableCell>
+						<TableCell>{credit.description}</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+		</Suspense>
 	);
 }

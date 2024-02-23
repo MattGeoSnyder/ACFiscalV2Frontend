@@ -2,6 +2,7 @@
 import { API_BASE_URL } from "@/app/constants";
 import { assert } from "console";
 import { RedirectType, redirect } from "next/navigation";
+import { ACHCredit } from "@/app/types";
 
 export async function signup(
 	prevState: any,
@@ -48,5 +49,18 @@ export async function login(
 		return token;
 	} catch (error) {
 		console.log(error);
+	}
+}
+
+export async function fetchACHCredits(
+	params: URLSearchParams
+): Promise<ACHCredit[]> {
+	try {
+		const res = await fetch(
+			`${API_BASE_URL}/ach?${params.toString()}`
+		);
+		return res.json();
+	} catch (error) {
+		throw error;
 	}
 }

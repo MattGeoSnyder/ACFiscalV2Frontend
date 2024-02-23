@@ -1,37 +1,52 @@
-import { API_BASE_URL } from "@/app/constants";
-import { Suspense } from "react";
+"use client";
+
 import {
 	Table,
-	TableBody,
-	TableCaption,
-	TableCell,
 	TableHead,
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import { ACHCreditsTableBody } from "@/components/ACHCreditsTableBody";
-import { ACHCreditsTableBodyLoading } from "@/components/ACHCreditsTableBodyLoading";
-type SearchParams = { [key: string]: string | undefined };
+import { useEffect, useState } from "react";
+import ACHClaimed from "./ACHClaimed";
+import { ACHCreditsTableBody } from "./ACHCreditsTableBody";
+import { useQuery } from "@tanstack/react-query";
+import { fetchACHCredits } from "@/actions/actions";
+import { ACHCredit } from "@/app/types";
 
-export default async function ACHCreditsTable({
-	searchParams,
-}: SearchParams) {
-	const params = new URLSearchParams(searchParams);
+export default function ACHCreditsTable({
+	params,
+}: {
+	params: URLSearchParams;
+}) {
+	const [claimed, setClaimed] = useState<ACHCredit[]>([]);
 
+	const { isPending, isError, data, error } = useQuery<
+		ACHCredit[]
+	>({
+		queryKey: ["ach_credits"],
+		queryFn: () => {
+			return fetchACHCredits(params);
+		},
+		initialData: [],
+	});
 	return (
-		<Table>
-			<TableHeader>
-				<TableRow>
-					<TableHead>Claim</TableHead>
-					<TableHead>Received</TableHead>
-					<TableHead>Fund</TableHead>
-					<TableHead>Amount</TableHead>
-					<TableHead>Description</TableHead>
-				</TableRow>
-			</TableHeader>
-			<Suspense fallback={<ACHCreditsTableBodyLoading />}>
-				<ACHCreditsTableBody params={params} />
-			</Suspense>
-		</Table>
+		<>
+			{claimed.length && <ACHClaimed />}
+			<Table>
+				<TableHeader>
+					<TableRow>
+						<TableHead>Claim</TableHead>
+						<TableHead>Received</TableHead>
+						<TableHead>Fund</TableHead>
+						<TableHead>Amount</TableHead>
+						<TableHead>Description</TableHead>
+					</TableRow>
+				</TableHeader>
+				<ACHCreditsTableBody
+					credits={data}
+					setClaimed={setClaimed}
+				/>
+			</Table>
+		</>
 	);
 }
