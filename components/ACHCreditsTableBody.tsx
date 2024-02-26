@@ -6,12 +6,12 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
 import { SetStateAction, Suspense } from "react";
 import { ACHCreditsTableBodyLoading } from "./ACHCreditsTableBodyLoading";
 import { ACHCredit } from "@/app/types";
+import { ACHClaimButton } from "@/components/ACHClaimButton";
 
-export async function ACHCreditsTableBody({
+export function ACHCreditsTableBody({
 	credits,
 	setClaimed,
 }: {
@@ -23,19 +23,7 @@ export async function ACHCreditsTableBody({
 		currency: "USD",
 	});
 
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement>,
-		credit: ACHCredit
-	) => {
-		setClaimed((claimed) => {
-			if (!e.) return claimed;
-
-			for (let c of claimed) {
-				if (c.id === credit.id) return claimed;
-			}
-			return [...claimed, credit];
-		});
-	};
+	console.log(credits);
 
 	return (
 		<Suspense fallback={<ACHCreditsTableBodyLoading />}>
@@ -43,11 +31,11 @@ export async function ACHCreditsTableBody({
 				{credits.map((credit: ACHCredit) => (
 					<TableRow>
 						<TableCell>
-							<Checkbox
-								className='self-center'
-								onChange={(e) => {
-									handleChange(e, credit);
-								}}></Checkbox>
+							<ACHClaimButton
+								claimed={credits}
+								setClaimed={setClaimed}
+								credit={credit}
+							/>
 						</TableCell>
 						<TableCell>
 							{new Date(credit.received).toDateString()}

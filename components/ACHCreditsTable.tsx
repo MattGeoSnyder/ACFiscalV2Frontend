@@ -10,8 +10,27 @@ import { useEffect, useState } from "react";
 import ACHClaimed from "./ACHClaimed";
 import { ACHCreditsTableBody } from "./ACHCreditsTableBody";
 import { useQuery } from "@tanstack/react-query";
-import { fetchACHCredits } from "@/actions/actions";
 import { ACHCredit } from "@/app/types";
+import { API_BASE_URL } from "@/app/constants";
+
+async function fetchACHCredits(
+	params: URLSearchParams,
+	limit: number = 10,
+	outStanding: boolean = true
+): Promise<ACHCredit[]> {
+	params.append("outstanding", outStanding.toString());
+	params.append("limit", limit.toString());
+	try {
+		const res = await fetch(
+			`${API_BASE_URL}/ach?${params.toString()}`,
+			{ method: "GET" }
+		);
+		const achCredits = await res.json();
+		return achCredits.ach_credits;
+	} catch (error) {
+		throw error;
+	}
+}
 
 export default function ACHCreditsTable({
 	params,
@@ -31,7 +50,6 @@ export default function ACHCreditsTable({
 	});
 	return (
 		<>
-			{claimed.length && <ACHClaimed />}
 			<Table>
 				<TableHeader>
 					<TableRow>
