@@ -1,41 +1,32 @@
 "use client";
 
-import { API_BASE_URL } from "@/app/constants";
 import {
 	TableBody,
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
-import { SetStateAction, Suspense } from "react";
+import { Suspense } from "react";
 import { ACHCreditsTableBodyLoading } from "./ACHCreditsTableBodyLoading";
 import { ACHCredit } from "@/app/types";
-import { ACHClaimButton } from "@/components/ACHClaimButton";
+import { ACHClaimButton } from "@/components/ach/ACHClaimButton";
 
 export function ACHCreditsTableBody({
 	credits,
-	setClaimed,
 }: {
 	credits: ACHCredit[];
-	setClaimed: React.Dispatch<SetStateAction<ACHCredit[]>>;
 }) {
 	const formatter = new Intl.NumberFormat("en-US", {
 		style: "currency",
 		currency: "USD",
 	});
 
-	console.log(credits);
-
 	return (
 		<Suspense fallback={<ACHCreditsTableBodyLoading />}>
 			<TableBody>
 				{credits.map((credit: ACHCredit) => (
-					<TableRow>
+					<TableRow key={credit.id}>
 						<TableCell>
-							<ACHClaimButton
-								claimed={credits}
-								setClaimed={setClaimed}
-								credit={credit}
-							/>
+							<ACHClaimButton credit={credit} />
 						</TableCell>
 						<TableCell>
 							{new Date(credit.received).toDateString()}

@@ -51,22 +51,3 @@ export async function login(
 		console.log(error);
 	}
 }
-
-export async function fetchACHCredits(
-	params: URLSearchParams,
-	limit: number = 10,
-	outStanding: boolean = true
-): Promise<ACHCredit[]> {
-	params.append("outstanding", outStanding.toString());
-	params.append("limit", limit.toString());
-	try {
-		const res = await fetch(
-			`${API_BASE_URL}/ach?${params.toString()}`,
-			{ method: "GET" }
-		);
-		const achCredits = await res.json();
-		return achCredits.ach_credits;
-	} catch (error) {
-		throw error;
-	}
-}
