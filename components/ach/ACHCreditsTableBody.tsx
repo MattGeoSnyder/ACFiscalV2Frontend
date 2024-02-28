@@ -5,7 +5,6 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
-import { Suspense } from "react";
 import { ACHCreditsTableBodyLoading } from "./ACHCreditsTableBodyLoading";
 import { ACHCredit } from "@/app/types";
 import { ACHClaimButton } from "@/components/ach/ACHClaimButton";
@@ -20,27 +19,27 @@ export function ACHCreditsTableBody({
 		currency: "USD",
 	});
 
+	if (credits.length === 0) {
+		return <ACHCreditsTableBodyLoading />;
+	}
+
 	return (
-		<Suspense fallback={<ACHCreditsTableBodyLoading />}>
-			<TableBody>
-				{credits.map((credit: ACHCredit) => (
-					<TableRow key={credit.id}>
-						<TableCell>
-							<ACHClaimButton credit={credit} />
-						</TableCell>
-						<TableCell>
-							{new Date(credit.received).toDateString()}
-						</TableCell>
-						<TableCell>{credit.fund}</TableCell>
-						<TableCell>
-							{formatter.format(
-								credit.amount_in_cents / 100
-							)}
-						</TableCell>
-						<TableCell>{credit.description}</TableCell>
-					</TableRow>
-				))}
-			</TableBody>
-		</Suspense>
+		<TableBody>
+			{credits.map((credit: ACHCredit) => (
+				<TableRow key={credit.id}>
+					<TableCell>
+						<ACHClaimButton credit={credit} />
+					</TableCell>
+					<TableCell>
+						{new Date(credit.received).toDateString()}
+					</TableCell>
+					<TableCell>{credit.fund}</TableCell>
+					<TableCell>
+						{formatter.format(credit.amount_in_cents / 100)}
+					</TableCell>
+					<TableCell>{credit.description}</TableCell>
+				</TableRow>
+			))}
+		</TableBody>
 	);
 }

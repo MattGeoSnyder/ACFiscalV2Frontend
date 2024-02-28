@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { ClaimedContext } from "@/components/ach/Providers";
 import {
 	TableBody,
@@ -9,13 +9,19 @@ import {
 	TableHeader,
 	TableHead,
 	Table,
+	TableFooter,
 } from "@/components/ui/table";
 import ACHUnClaimButton from "@/components/ach/ACHUnClaimButton";
+import ACHClaimBatchButton from "./ACHClaimBatchButton";
 
 export default function ACHClaimedTable() {
 	const { claimed, setClaimed } =
 		useContext(ClaimedContext);
 	const claimedCredits = Object.values(claimed);
+	const total =
+		claimedCredits.reduce((acc, credit) => {
+			return acc + credit.amount_in_cents;
+		}, 0) / 100;
 
 	const formatter = new Intl.NumberFormat("en-US", {
 		style: "currency",
@@ -27,6 +33,13 @@ export default function ACHClaimedTable() {
 	return (
 		<Table>
 			<TableHeader>
+				<TableRow>
+					<TableCell colSpan={5}>
+						<span className='text-2xl font-bold'>
+							You're claiming:
+						</span>
+					</TableCell>
+				</TableRow>
 				<TableRow>
 					<TableHead>Unclaim</TableHead>
 					<TableHead>Received</TableHead>
@@ -52,6 +65,23 @@ export default function ACHClaimedTable() {
 					</TableRow>
 				))}
 			</TableBody>
+			<TableFooter>
+				<TableRow>
+					<TableCell colSpan={3}>
+						<span className='text-2xl font-bold'>
+							Total:
+						</span>
+					</TableCell>
+					<TableCell>
+						<span className='text-xl font-bold'>
+							{formatter.format(total)}
+						</span>
+					</TableCell>
+					<TableCell>
+						<ACHClaimBatchButton />
+					</TableCell>
+				</TableRow>
+			</TableFooter>
 		</Table>
 	);
 }

@@ -4,6 +4,9 @@ import { ACHCredit } from "@/app/types";
 import { API_BASE_URL } from "@/app/constants";
 import { Providers } from "@/components/ach/Providers";
 import ACHClaimedTable from "@/components/ach/ACHClaimedTable";
+import { resolve } from "path";
+import { Suspense } from "react";
+import { ACHCreditsTableBodyLoading } from "@/components/ach/ACHCreditsTableBodyLoading";
 
 type SearchParams = { [key: string]: string | undefined };
 
@@ -17,7 +20,10 @@ async function fetchOutstandingACHCredits(
 	try {
 		const res = await fetch(
 			`${API_BASE_URL}/ach?${params.toString()}`,
-			{ method: "GET" }
+			{
+				method: "GET",
+				cache: "no-cache",
+			}
 		);
 		const achCredits = await res.json();
 		return achCredits.ach_credits;
@@ -31,16 +37,25 @@ export default async function AchPage({
 }: SearchParams) {
 	const params = new URLSearchParams(searchParams);
 
-	const achCredits = await fetchOutstandingACHCredits(
-		params
+	const achCredits = await new Promise<ACHCredit[]>(
+		(resolve, reject) => {
+			setTimeout(() => {
+				fetchOutstandingACHCredits(params)
+					.then((credits) => resolve(credits))
+					.then((error) => reject(error));
+			}, 3000);
+		}
 	);
+	// const achCredits = await fetchOutstandingACHCredits(
+	// 	params
+	// );
 
 	return (
 		<div className='flex flex-col items-center'>
-			<ACHSearchForm />
-			<div className='lg:w-5/6 flex-1'>
+			<div className='lg:w-5/6 flex-1 flex flex-col gap-5'>
 				<Providers>
 					<ACHClaimedTable />
+					<ACHSearchForm />
 					<ACHCreditsTable credits={achCredits} />
 				</Providers>
 			</div>
