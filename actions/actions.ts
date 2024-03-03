@@ -51,3 +51,28 @@ export async function login(
 		console.log(error);
 	}
 }
+
+const fetchDepartments = async () => {
+	const res = await fetch(`${API_BASE_URL}/departments`);
+	const departments: {
+		departments: { id: number; name: string }[];
+	} = await res.json();
+};
+
+export async function postRoc(
+	prevState: any,
+	formData: FormData
+) {
+	// try {
+	// 	const res = await fetch(`${API_BASE_URL}/roc`, {
+	// 		method: "POST",
+	// 		headers: { "Content-Type": "multipart/form-data" },
+	// 		body: formData,
+	// 	});
+	// 	return res.json();
+	// } catch (error) {
+	// 	console.log(error);
+	// }
+	console.log(formData);
+	return new Promise<void>((resolve) => {});
+}

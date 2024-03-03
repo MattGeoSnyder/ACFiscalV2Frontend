@@ -12,7 +12,8 @@ import {
 	TableFooter,
 } from "@/components/ui/table";
 import ACHUnClaimButton from "@/components/ach/ACHUnClaimButton";
-import ACHClaimBatchButton from "./ACHClaimBatchButton";
+import ACHClaimBatchButton from "./ACHClaimBatchDialog";
+import ACHClaimBatchDialog from "./ACHClaimBatchDialog";
 
 export default function ACHClaimedTable() {
 	const { claimed, setClaimed } =
@@ -78,7 +79,10 @@ export default function ACHClaimedTable() {
 						</span>
 					</TableCell>
 					<TableCell>
-						<ACHClaimBatchButton />
+						<ACHClaimBatchDialog
+							count={claimedCredits.length}
+							total={total}
+						/>
 					</TableCell>
 				</TableRow>
 			</TableFooter>
