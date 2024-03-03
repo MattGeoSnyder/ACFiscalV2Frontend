@@ -74,5 +74,7 @@ export async function postRoc(
 	// 	console.log(error);
 	// }
 	console.log(formData);
-	return new Promise<void>((resolve) => {});
+	return new Promise<{ error: string }>((resolve) => {
+		resolve({ error: "" });
+	});
 }

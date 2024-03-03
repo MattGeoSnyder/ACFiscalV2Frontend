@@ -11,13 +11,10 @@ export function ACHClaimForm({
 	totalInCents: number;
 }) {
 	const errMsg = { error: "" };
-	const [formState, formAction] = useFormState(
-		postRoc,
-		errMsg
-	);
-	const handleSubmit = async (state: {
+	const [formState, formAction] = useFormState<{
 		error: string;
-	}) => {};
+	}>(postRoc, errMsg);
+	const handleSubmit = async (formData: FormData) => {};
 	return (
 		<form
 			action={handleSubmit}
