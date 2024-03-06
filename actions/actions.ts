@@ -73,8 +73,17 @@ export async function postRoc(
 	// } catch (error) {
 	// 	console.log(error);
 	// }
-	console.log(formData);
-	return new Promise<{ error: string }>((resolve) => {
-		resolve({ error: "" });
-	});
+	const file = formData.get("file") as File | null;
+	if (file === null) {
+		prevState.error = "Please upload a file";
+		return prevState;
+	}
+
+	if (
+		file.type !==
+		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+	) {
+		prevState.error = "Please upload an excel file";
+		return prevState;
+	}
 }

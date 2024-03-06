@@ -6,33 +6,27 @@ import { useFormState } from "react-dom";
 import { postRoc } from "@/actions/actions";
 
 export function ACHClaimForm({
-	totalInCents,
+	children,
 }: {
-	totalInCents: number;
+	children?: React.ReactNode;
 }) {
 	const errMsg = { error: "" };
-	const [formState, formAction] = useFormState<{
-		error: string;
-	}>(postRoc, errMsg);
-	const handleSubmit = async (formData: FormData) => {};
+	const [state, formAction] = useFormState(postRoc, errMsg);
+	const claimAchCredits = async (formData: FormData) => {
+		formAction(formData);
+	};
 	return (
-		<form
-			action={handleSubmit}
-			className='self-start w-full flex gap-5'
-		>
-			<Input
-				type='number'
-				className='hidden'
-				name='total'
-				value={totalInCents}
-			/>
-			<Input
-				id='roc-upload'
-				type='file'
-				name='file'
-			/>
-
-			<Button>Submit</Button>
-		</form>
+		<>
+			<form
+				action={claimAchCredits}
+				className='gap-y-1 flex flex-col w-full h-auto'>
+				{children}
+				<div className='flex-wrap w-full row-start-2 col-span-2'>
+					{state.error && (
+						<p className='text-red-500'>{state.error}</p>
+					)}
+				</div>
+			</form>
+		</>
 	);
 }

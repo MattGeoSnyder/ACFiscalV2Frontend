@@ -16,6 +16,8 @@ import { Button } from "@/components/ui/button";
 import { formatDollars } from "@/lib/helpers/FormatDollars";
 import { ACHClaimForm } from "@/components/ach/ACHClaimForm";
 import { ClaimedContext } from "./Providers";
+import { MultifileInput } from "../ui/multifile-input";
+import { Input } from "@/components/ui/input";
 
 export default function ACHClaimBatchDialog({
 	count,
@@ -24,9 +26,6 @@ export default function ACHClaimBatchDialog({
 	count: number;
 	total: number;
 }) {
-	const dialog = useRef<HTMLDialogElement>(null);
-	const claimedCredits = useContext(ClaimedContext);
-
 	return (
 		<AlertDialog>
 			<AlertDialogTrigger asChild>
@@ -42,12 +41,26 @@ export default function ACHClaimBatchDialog({
 							{formatDollars(total)}
 						</span>
 					</AlertDialogTitle>
-					<AlertDialogDescription>
-						Please upload your ROC to claim multiple ACH
-						Credits
-					</AlertDialogDescription>
+					<ACHClaimForm>
+						<Input
+							type='number'
+							className='hidden'
+							name='total'
+							value={total * 100}
+						/>
+						<AlertDialogDescription>
+							Upload your ROCs to claim ACH Credits{" "}
+							{"(.xlsx files only)"}
+						</AlertDialogDescription>
+						<MultifileInput className='w-full min-h-[100px] relative' />
+						<AlertDialogDescription>
+							Upload any supporting documentation{" "}
+							{"(optional)"}
+						</AlertDialogDescription>
+						<MultifileInput className='w-full min-h-[100px] relative' />
+					</ACHClaimForm>
 					<AlertDialogFooter>
-						<ACHClaimForm totalInCents={total * 100} />
+						<Button>Submit</Button>
 					</AlertDialogFooter>
 				</AlertDialogHeader>
 			</AlertDialogContent>

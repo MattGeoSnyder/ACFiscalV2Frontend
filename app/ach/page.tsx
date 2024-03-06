@@ -4,9 +4,6 @@ import { ACHCredit } from "@/app/types";
 import { API_BASE_URL } from "@/app/constants";
 import { Providers } from "@/components/ach/Providers";
 import ACHClaimedTable from "@/components/ach/ACHClaimedTable";
-import { resolve } from "path";
-import { Suspense } from "react";
-import { ACHCreditsTableBodyLoading } from "@/components/ach/ACHCreditsTableBodyLoading";
 
 type SearchParams = { [key: string]: string | undefined };
 
@@ -28,7 +25,7 @@ async function fetchOutstandingACHCredits(
 		const achCredits = await res.json();
 		return achCredits.ach_credits;
 	} catch (error) {
-		throw error;
+		return [];
 	}
 }
 
@@ -37,18 +34,20 @@ export default async function AchPage({
 }: SearchParams) {
 	const params = new URLSearchParams(searchParams);
 
-	const achCredits = await new Promise<ACHCredit[]>(
-		(resolve, reject) => {
-			setTimeout(() => {
-				fetchOutstandingACHCredits(params)
-					.then((credits) => resolve(credits))
-					.then((error) => reject(error));
-			}, 3000);
-		}
-	);
-	// const achCredits = await fetchOutstandingACHCredits(
-	// 	params
+	// delay call for testing loading state
+	// const achCredits = await new Promise<ACHCredit[]>(
+	// 	(resolve, reject) => {
+	// 		setTimeout(() => {
+	// 			fetchOutstandingACHCredits(params)
+	// 				.then((credits) => resolve(credits))
+	// 				.then((error) => reject(error));
+	// 		}, 3000);
+	// 	}
 	// );
+
+	const achCredits = await fetchOutstandingACHCredits(
+		params
+	);
 
 	return (
 		<div className='flex flex-col items-center'>
