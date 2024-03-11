@@ -5,7 +5,6 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
-import { ACHCreditsTableBodyLoading } from "./ACHCreditsTableBodyLoading";
 import { ACHCredit } from "@/app/types";
 import { ACHClaimButton } from "@/components/ach/ACHClaimButton";
 
@@ -18,10 +17,6 @@ export function ACHCreditsTableBody({
 		style: "currency",
 		currency: "USD",
 	});
-
-	if (credits.length === 0) {
-		return <ACHCreditsTableBodyLoading />;
-	}
 
 	return (
 		<TableBody>

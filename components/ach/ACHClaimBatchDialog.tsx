@@ -41,26 +41,12 @@ export default function ACHClaimBatchDialog({
 							{formatDollars(total)}
 						</span>
 					</AlertDialogTitle>
-					<ACHClaimForm>
-						<Input
-							type='number'
-							className='hidden'
-							name='total'
-							value={total * 100}
-						/>
-						<AlertDialogDescription>
-							Upload your ROCs to claim ACH Credits{" "}
-							{"(.xlsx files only)"}
-						</AlertDialogDescription>
-						<MultifileInput className='w-full min-h-[100px] relative' />
-						<AlertDialogDescription>
-							Upload any supporting documentation{" "}
-							{"(optional)"}
-						</AlertDialogDescription>
-						<MultifileInput className='w-full min-h-[100px] relative' />
-					</ACHClaimForm>
+					<ACHClaimForm
+						total={total}
+						id='ach-claim-form'
+					/>
 					<AlertDialogFooter>
-						<Button>Submit</Button>
+						<Button form='ach-claim-form'>Submit</Button>
 					</AlertDialogFooter>
 				</AlertDialogHeader>
 			</AlertDialogContent>

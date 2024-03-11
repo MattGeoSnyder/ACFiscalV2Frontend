@@ -2,7 +2,7 @@
 import { API_BASE_URL } from "@/app/constants";
 import { assert } from "console";
 import { RedirectType, redirect } from "next/navigation";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit, ACHClaimFormData } from "@/app/types";
 
 export async function signup(
 	prevState: any,
@@ -59,10 +59,7 @@ const fetchDepartments = async () => {
 	} = await res.json();
 };
 
-export async function postRoc(
-	prevState: any,
-	formData: FormData
-) {
+export async function postRoc(formData: FormData) {
 	// try {
 	// 	const res = await fetch(`${API_BASE_URL}/roc`, {
 	// 		method: "POST",
@@ -73,17 +70,44 @@ export async function postRoc(
 	// } catch (error) {
 	// 	console.log(error);
 	// }
-	const file = formData.get("file") as File | null;
+	console.log(formData);
+	console.log("posting roc");
+	const file = formData.get("roc") as File | null;
+
 	if (file === null) {
-		prevState.error = "Please upload a file";
-		return prevState;
+		const error = "Please upload a file";
+		console.log(error);
+		return;
 	}
 
 	if (
 		file.type !==
 		"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 	) {
-		prevState.error = "Please upload an excel file";
-		return prevState;
+		const error = "File must be an xlsx file";
+		console.log(error);
+		return;
 	}
+
+	const supportingDocs = formData.getAll(
+		"supportingDocs"
+	) as File[] | null;
+	if (supportingDocs === null) {
+		const error = "Please upload a file";
+		return;
+	}
+
+	for (let file of supportingDocs) {
+		if (
+			file.type !==
+			("application/pdf" ||
+				"application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+		) {
+		}
+	}
+	const res = await fetch(`${API_BASE_URL}/roc`, {
+		method: "POST",
+		body: formData,
+	});
+	return res;
 }

@@ -4,6 +4,9 @@ import { ACHCredit } from "@/app/types";
 import { API_BASE_URL } from "@/app/constants";
 import { Providers } from "@/components/ach/Providers";
 import ACHClaimedTable from "@/components/ach/ACHClaimedTable";
+import { ACHCreditsTableLoading } from "@/components/ach/ACHCreditsTableLoading";
+import { Suspense } from "react";
+import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
 type SearchParams = { [key: string]: string | undefined };
 
@@ -18,10 +21,15 @@ async function fetchOutstandingACHCredits(
 		const res = await fetch(
 			`${API_BASE_URL}/ach?${params.toString()}`,
 			{
-				method: "GET",
-				cache: "no-cache",
+				cache: "no-store",
 			}
 		);
+
+		// TODO: Remove this once we're done testing loading state
+		await new Promise((resolve) =>
+			setTimeout(resolve, 3000)
+		);
+
 		const achCredits = await res.json();
 		return achCredits.ach_credits;
 	} catch (error) {
@@ -34,17 +42,6 @@ export default async function AchPage({
 }: SearchParams) {
 	const params = new URLSearchParams(searchParams);
 
-	// delay call for testing loading state
-	// const achCredits = await new Promise<ACHCredit[]>(
-	// 	(resolve, reject) => {
-	// 		setTimeout(() => {
-	// 			fetchOutstandingACHCredits(params)
-	// 				.then((credits) => resolve(credits))
-	// 				.then((error) => reject(error));
-	// 		}, 3000);
-	// 	}
-	// );
-
 	const achCredits = await fetchOutstandingACHCredits(
 		params
 	);
@@ -55,7 +52,10 @@ export default async function AchPage({
 				<Providers>
 					<ACHClaimedTable />
 					<ACHSearchForm />
-					<ACHCreditsTable credits={achCredits} />
+
+					<Suspense fallback={<ACHCreditsTableLoading />}>
+						<ACHCreditsTable credits={achCredits} />
+					</Suspense>
 				</Providers>
 			</div>
 		</div>

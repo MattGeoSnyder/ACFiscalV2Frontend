@@ -1,42 +1,35 @@
-"use client";
-
-import React, {
-	useState,
-	useRef,
-	InputHTMLAttributes,
-	Dispatch,
-	SetStateAction,
-} from "react";
-import { Card, CardContent } from "./card";
+import React, { Dispatch, SetStateAction } from "react";
 import { ACHClaimFormData } from "@/app/types";
+import { Card, CardContent } from "./card";
 
-//TODO: this style on wrapper 'w-full min-h-[500px] absolute'
-
-interface MultifileInputInterface
-	extends InputHTMLAttributes<HTMLInputElement> {
+interface FileInputInterface
+	extends React.InputHTMLAttributes<HTMLInputElement> {
 	formState: ACHClaimFormData;
 	setFormState: Dispatch<SetStateAction<ACHClaimFormData>>;
 }
 
-export function MultifileInput({
+export function FileInput({
 	formState,
 	setFormState,
 	...props
-}: MultifileInputInterface) {
+}: FileInputInterface) {
 	const { className, ...rest } = props;
 	const name = props.name as keyof ACHClaimFormData;
-	const files = formState[name] as File[];
+	const roc = formState[name] as File;
+	console.log(roc);
+
+	const handleDragOver = (e: React.DragEvent) => {
+		e.preventDefault();
+	};
 
 	const handleDrop = (e: React.DragEvent) => {
 		e.preventDefault();
 		const dt = e.dataTransfer;
-		const newFiles = Array.from(dt.files);
+		const newRoc = dt.files;
 		setFormState((formData) => {
-			const temp = formData[name] as File[];
-			console.log(temp);
 			return {
 				...formData,
-				[name]: [...temp, ...newFiles],
+				[name]: newRoc,
 			};
 		});
 	};
@@ -44,19 +37,14 @@ export function MultifileInput({
 	const handleChange = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
-		if (!e.target.files) return;
-		const newFiles = Array.from(e.target.files);
+		e.preventDefault();
+		const newRoc = e.target.files;
 		setFormState((formData) => {
-			const temp = formData[name] as File[];
 			return {
 				...formData,
-				[name]: [...temp, ...newFiles],
+				[name]: newRoc?.item(0),
 			};
 		});
-	};
-
-	const handleDragOver = (e: React.DragEvent) => {
-		e.preventDefault();
 	};
 
 	return (
@@ -68,25 +56,20 @@ export function MultifileInput({
 				onDrop={handleDrop}
 				onDragOver={handleDragOver}
 				onChange={handleChange}
-				multiple
 			/>
 			<div className='w-full'>
-				{files.length === 0 && (
+				{!roc && (
 					<Card className='h-auto'>
 						<CardContent>
 							<p>Click or drag files here to upload.</p>
 						</CardContent>
 					</Card>
 				)}
-				{files.length > 0 && (
+				{roc && (
 					<div>
-						{files.map((file, i) => (
-							<div
-								key={i}
-								className='p-2'>
-								<p>{file.name}</p>
-							</div>
-						))}
+						<div className='p-2'>
+							<p>{roc.name}</p>
+						</div>
 					</div>
 				)}
 			</div>
