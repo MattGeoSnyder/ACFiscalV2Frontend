@@ -90,13 +90,13 @@ export function ACHClaimForm({
 		const formData = new FormData();
 		const creditIds = new FormData(
 			e.target as HTMLFormElement
-		).getAll("credit");
+		).getAll("credits");
 		formData.append("roc", formState.roc as File);
 		for (let doc of formState.docs) {
 			formData.append("docs", doc);
 		}
 		for (let creditId of creditIds) {
-			formData.append("credit", creditId);
+			formData.append("credits", creditId);
 		}
 		formData.append("total", formState.total.toString());
 
@@ -131,7 +131,7 @@ export function ACHClaimForm({
 					<Input
 						key={credit.id}
 						type='hidden'
-						name={`credit`}
+						name={`credits`}
 						value={credit.id}
 						readOnly
 					/>
