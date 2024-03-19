@@ -26,30 +26,43 @@ export default function ACHClaimBatchDialog({
 	count: number;
 	total: number;
 }) {
+	const [isOpen, setIsOpen] = useState<boolean>(true);
+
+	const handleKeyPress = (e: React.KeyboardEvent) => {
+		if (e.key === "Escape") {
+			setIsOpen(false);
+		}
+	};
+
 	return (
-		<AlertDialog>
-			<AlertDialogTrigger asChild>
-				<Button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-					Claim Batch
-				</Button>
-			</AlertDialogTrigger>
-			<AlertDialogContent className='gap-3'>
-				<AlertDialogHeader>
-					<AlertDialogTitle>
-						<span>
-							You're claiming {count} credits for a total of{" "}
-							{formatDollars(total)}
-						</span>
-					</AlertDialogTitle>
-					<ACHClaimForm
-						total={total}
-						id='ach-claim-form'
-					/>
-					<AlertDialogFooter>
-						<Button form='ach-claim-form'>Submit</Button>
-					</AlertDialogFooter>
-				</AlertDialogHeader>
-			</AlertDialogContent>
-		</AlertDialog>
+		<div onKeyDown={handleKeyPress}>
+			<AlertDialog
+				open={isOpen}
+				onOpenChange={setIsOpen}>
+				<AlertDialogTrigger asChild>
+					<Button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
+						Claim Batch
+					</Button>
+				</AlertDialogTrigger>
+				<AlertDialogContent className='gap-3'>
+					<AlertDialogHeader>
+						<AlertDialogTitle>
+							<span>
+								You're claiming {count} credits for a total
+								of {formatDollars(total)}
+							</span>
+						</AlertDialogTitle>
+						<ACHClaimForm
+							total={total}
+							id='ach-claim-form'
+							setIsOpen={setIsOpen}
+						/>
+						<AlertDialogFooter>
+							<Button form='ach-claim-form'>Submit</Button>
+						</AlertDialogFooter>
+					</AlertDialogHeader>
+				</AlertDialogContent>
+			</AlertDialog>
+		</div>
 	);
 }

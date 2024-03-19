@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { ACHClaimFormData, ACHCredit } from "@/app/types";
 // import { postRoc } from "@/actions/actions";
 import { Input } from "@/components/ui/input";
@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { API_BASE_URL } from "@/app/constants";
 import { FileInput } from "@/components/ui/file-input";
 import { ClaimedContext } from "@/components/ach/Providers";
+import { useRouter } from "next/navigation";
 
 export async function postRoc(formData: FormData) {
 	const files = formData.getAll("roc") as File[] | null;
@@ -60,25 +61,31 @@ export async function postRoc(formData: FormData) {
 interface ACHClaimFormInterface
 	extends React.FormHTMLAttributes<HTMLFormElement> {
 	total: number;
+	setIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function ACHClaimForm({
 	className,
 	total,
+	setIsOpen,
 	...props
 }: ACHClaimFormInterface) {
 	const initialFormData = {
 		roc: null,
 		docs: [],
-		total,
+		total: Math.floor(total * 100),
 	};
 
 	const { claimed } = useContext(ClaimedContext);
-	const claimedCreditsArray = Object.values(claimed);
+	console.log(total);
+	console.log(total * 100);
 
 	const mutation = useMutation({
 		mutationFn: (formData: FormData) => postRoc(formData),
 	});
+
+	const { data, error, isError, isSuccess } = mutation;
+	const router = useRouter();
 
 	const [formState, setFormState] =
 		useState<ACHClaimFormData>(initialFormData);
@@ -100,12 +107,19 @@ export function ACHClaimForm({
 		}
 		formData.append("total", formState.total.toString());
 
-		const mutate = () => {
-			mutation.mutate(formData);
-		};
-		mutate();
+		mutation.mutate(formData);
 	};
 
+	useEffect(() => {
+		if (isSuccess) {
+			if (setIsOpen) {
+				setTimeout(() => {
+					router.push("/ach");
+					setIsOpen(false);
+				}, 2000);
+			}
+		}
+	}, [isError, isSuccess]);
 	// const handleChange = (
 	// 	e: React.ChangeEvent<HTMLInputElement>
 	// ) => {
@@ -140,7 +154,7 @@ export function ACHClaimForm({
 					type='number'
 					className='hidden'
 					name='total'
-					value={total * 100}
+					value={Math.floor(total * 100)}
 					readOnly
 				/>
 				<AlertDialogDescription>
@@ -164,13 +178,24 @@ export function ACHClaimForm({
 					setFormState={setFormState}
 				/>
 				{/* TODO: handle error */}
-				{/* <div className='flex-wrap w-full row-start-2 col-span-2'>
-					{formState.error && (
-						<p className='text-red-500'>
-							{formState.error}
-						</p>
-					)}
-				</div> */}
+				{isError && (
+					<div className='flex-wrap w-full row-start-2 col-span-2'>
+						{isError && (
+							<p className='text-red-500'>
+								{isError.valueOf()}
+							</p>
+						)}
+					</div>
+				)}
+				{isSuccess && (
+					<div className='flex-wrap w-full row-start-2 col-span-2'>
+						{isSuccess && (
+							<p className='text-green-500'>
+								{isSuccess.valueOf()}
+							</p>
+						)}
+					</div>
+				)}
 			</form>
 		</>
 	);
