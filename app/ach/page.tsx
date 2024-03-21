@@ -31,11 +31,6 @@ async function fetchOutstandingACHCredits(
 			}
 		);
 
-		// TODO: Remove this once we're done testing loading state
-		await new Promise((resolve) =>
-			setTimeout(resolve, 3000)
-		);
-
 		const achCredits = await res.json();
 		return achCredits.ach_credits;
 	} catch (error) {
