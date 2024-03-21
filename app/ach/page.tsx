@@ -47,7 +47,7 @@ export default async function AchPage({
 	searchParams,
 }: PageProps) {
 	const params = new URLSearchParams(
-		searchParams?.toString()
+		searchParams as { [key: string]: string }
 	);
 
 	const achCredits = await fetchOutstandingACHCredits(
