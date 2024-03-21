@@ -12,10 +12,10 @@ export default function ACHLayout({
 				<a
 					href={"/downloads/ROC_Template.xlsx"}
 					download={"ROC_Template.xlsx"}>
-					Download ROC template
+					{"Download ROC template"}
 				</a>
 				<a href={"/downloads/Vendor_Report"}>
-					Download Today's Vendor Report
+					{"Download Today's Vendor Report"}
 				</a>
 			</div>
 			{children}

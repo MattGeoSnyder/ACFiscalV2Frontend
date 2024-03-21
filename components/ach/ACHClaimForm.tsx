@@ -119,7 +119,7 @@ export function ACHClaimForm({
 				}, 2000);
 			}
 		}
-	}, [isError, isSuccess]);
+	}, [isError, isSuccess, router, setIsOpen]);
 	// const handleChange = (
 	// 	e: React.ChangeEvent<HTMLInputElement>
 	// ) => {

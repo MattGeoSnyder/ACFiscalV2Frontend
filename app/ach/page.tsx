@@ -8,7 +8,13 @@ import { ACHCreditsTableLoading } from "@/components/ach/ACHCreditsTableLoading"
 import { Suspense } from "react";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 
-type SearchParams = { [key: string]: string | undefined };
+type SearchParams = {
+	[key: string]: string | string[] | undefined;
+};
+
+interface PageProps {
+	searchParams: SearchParams;
+}
 
 async function fetchOutstandingACHCredits(
 	params: URLSearchParams,
@@ -39,8 +45,10 @@ async function fetchOutstandingACHCredits(
 
 export default async function AchPage({
 	searchParams,
-}: SearchParams) {
-	const params = new URLSearchParams(searchParams);
+}: PageProps) {
+	const params = new URLSearchParams(
+		searchParams?.toString()
+	);
 
 	const achCredits = await fetchOutstandingACHCredits(
 		params

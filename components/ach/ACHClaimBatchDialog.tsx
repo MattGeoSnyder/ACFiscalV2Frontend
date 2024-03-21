@@ -48,8 +48,8 @@ export default function ACHClaimBatchDialog({
 					<AlertDialogHeader>
 						<AlertDialogTitle>
 							<span>
-								You're claiming {count} credits for a total
-								of {formatDollars(total)}
+								You &apos re claiming {count} credits for a
+								total of {formatDollars(total)}
 							</span>
 						</AlertDialogTitle>
 						<ACHClaimForm

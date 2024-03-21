@@ -31,7 +31,7 @@ export function ACHClaimButton({
 		} else {
 			setSelected(false);
 		}
-	}, [claimed]);
+	}, [claimed, credit.id]);
 
 	const handleClick = () => {
 		if (!selected) {
