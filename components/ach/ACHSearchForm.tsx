@@ -8,7 +8,7 @@ import { DateInput } from "@/components/ui/dateInput";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { DepartmentSelect } from "../ui/departmentSelect";
+import { DepartmentSelect } from "@/app/ach/departmentSelect";
 
 const formSchema = z.object({
 	amount_lb: z.string().optional(),

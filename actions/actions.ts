@@ -1,8 +1,5 @@
 "use server";
 import { API_BASE_URL } from "@/app/constants";
-import { assert } from "console";
-import { RedirectType, redirect } from "next/navigation";
-import { ACHCredit, ACHClaimFormData } from "@/app/types";
 
 export async function signup(
 	prevState: any,
@@ -51,13 +48,6 @@ export async function login(
 		console.log(error);
 	}
 }
-
-const fetchDepartments = async () => {
-	const res = await fetch(`${API_BASE_URL}/departments`);
-	const departments: {
-		departments: { id: number; name: string }[];
-	} = await res.json();
-};
 
 export async function postRoc(formData: FormData) {
 	// try {
