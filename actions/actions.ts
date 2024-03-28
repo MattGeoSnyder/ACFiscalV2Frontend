@@ -1,5 +1,26 @@
 "use server";
 import { API_BASE_URL } from "@/app/constants";
+import { cookies } from "next/headers";
+import { AES } from "crypto-ts";
+
+export type Auth = {
+	id: number;
+	username: string;
+	departmentId: number;
+	scope: string[];
+};
+
+export async function handleCookie(sessionData: Auth) {
+	const encryptedSessionData = AES.encrypt(
+		JSON.stringify(sessionData),
+		process.env.SECRET_KEY as string
+	).toString();
+	cookies().set("session", encryptedSessionData, {
+		httpOnly: true,
+		maxAge: 60 * 60 * 24 * 7,
+		path: "/",
+	});
+}
 
 export async function signup(
 	prevState: any,
