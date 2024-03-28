@@ -1,6 +1,11 @@
 "use client";
 
-import { useState, useContext, useEffect } from "react";
+import {
+	useState,
+	useContext,
+	useEffect,
+	useTransition,
+} from "react";
 import { ACHClaimFormData, ACHCredit } from "@/app/types";
 // import { postRoc } from "@/actions/actions";
 import { Input } from "@/components/ui/input";
@@ -76,7 +81,9 @@ export function ACHClaimForm({
 		total: Math.floor(total * 100),
 	};
 
-	const { claimed } = useContext(ClaimedContext);
+	const { claimed, setClaimed } =
+		useContext(ClaimedContext);
+	const [isPending, startTransition] = useTransition();
 	console.log(total);
 	console.log(total * 100);
 
@@ -114,11 +121,13 @@ export function ACHClaimForm({
 		if (isSuccess) {
 			if (setIsOpen) {
 				setTimeout(() => {
-					router.push("/ach");
 					setIsOpen(false);
+					setClaimed({});
+					router.refresh();
 				}, 2000);
 			}
 		}
+		console.log(isSuccess);
 	}, [isError, isSuccess, router, setIsOpen]);
 	// const handleChange = (
 	// 	e: React.ChangeEvent<HTMLInputElement>
@@ -179,20 +188,18 @@ export function ACHClaimForm({
 				/>
 				{/* TODO: handle error */}
 				{isError && (
-					<div className='flex-wrap w-full row-start-2 col-span-2'>
+					<div className='w-full'>
 						{isError && (
 							<p className='text-red-500'>
-								{isError.valueOf()}
+								{"An error occurred"}
 							</p>
 						)}
 					</div>
 				)}
 				{isSuccess && (
-					<div className='flex-wrap w-full row-start-2 col-span-2'>
+					<div className='w-full'>
 						{isSuccess && (
-							<p className='text-green-500'>
-								{isSuccess.valueOf()}
-							</p>
+							<p className='text-green-500'>{"Success!"}</p>
 						)}
 					</div>
 				)}

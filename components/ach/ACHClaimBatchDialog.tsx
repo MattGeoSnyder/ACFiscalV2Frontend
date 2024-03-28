@@ -26,7 +26,7 @@ export default function ACHClaimBatchDialog({
 	count: number;
 	total: number;
 }) {
-	const [isOpen, setIsOpen] = useState<boolean>(true);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	const handleKeyPress = (e: React.KeyboardEvent) => {
 		if (e.key === "Escape") {
@@ -48,8 +48,8 @@ export default function ACHClaimBatchDialog({
 					<AlertDialogHeader>
 						<AlertDialogTitle>
 							<span>
-								You &apos re claiming {count} credits for a
-								total of {formatDollars(total)}
+								{`You're claiming {count} credits for a
+								total of ${formatDollars(total)}`}
 							</span>
 						</AlertDialogTitle>
 						<ACHClaimForm

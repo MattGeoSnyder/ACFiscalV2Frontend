@@ -37,7 +37,7 @@ export default function ACHClaimedTable() {
 				<TableRow>
 					<TableCell colSpan={5}>
 						<span className='text-2xl font-bold'>
-							You &apos re claiming:
+							{"You're claiming:"}
 						</span>
 					</TableCell>
 				</TableRow>
