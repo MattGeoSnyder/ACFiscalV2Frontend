@@ -12,7 +12,7 @@ import { RedirectType, redirect } from "next/navigation";
 
 export function LoginForm() {
 	const signupSchema = z.object({
-		email: z
+		username: z
 			.string()
 			.regex(/[a-z,A-Z]+.[a-z,A-Z]+@alleghenycounty.us$/, {
 				message: "Must be your Allegheny County email",
@@ -32,12 +32,9 @@ export function LoginForm() {
 
 	const loginAction = async (formData: FormData) => {
 		formAction(formData);
-		console.log(state);
-		if (state.token) {
-			redirect("/ach", RedirectType.replace);
-		}
 	};
 
+	// TODO: Remove default values.
 	return (
 		<form
 			className='flex flex-col justify-evenly w-content h-2/3 p-10 border border-gray-200 rounded-xl'
@@ -45,9 +42,10 @@ export function LoginForm() {
 			<div className=''>
 				<Label>E-mail</Label>
 				<Input
-					{...form.register("email")}
+					{...form.register("username")}
 					placeholder='Your @alleghenycounty.us email'
 					className='w-72'
+					defaultValue={"Matthew.Snyder@alleghenycounty.us"}
 				/>
 			</div>
 			<div>
@@ -56,6 +54,7 @@ export function LoginForm() {
 					type='password'
 					{...form.register("password")}
 					placeholder='Password'
+					defaultValue={"secret1234"}
 				/>
 			</div>
 			<FormButton className='w-fit self-center' />

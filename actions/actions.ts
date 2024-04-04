@@ -1,26 +1,20 @@
 "use server";
 import { API_BASE_URL } from "@/app/constants";
 import { cookies } from "next/headers";
-import { AES } from "crypto-ts";
+import { getServerSession } from "next-auth/next";
+import { fatch } from "@/lib/helpers/fatch";
+import { authOptions } from "@/app/auth/[...nextauth]/routes";
+import { POST } from "@/app/auth/[...nextauth]/routes";
 
-export type Auth = {
-	id: number;
-	username: string;
-	departmentId: number;
-	scope: string[];
+export type UserAuth = {
+	token: string;
+	payload: {
+		id: number;
+		name: string;
+		departmentId: number;
+		role: string[];
+	};
 };
-
-export async function handleCookie(sessionData: Auth) {
-	const encryptedSessionData = AES.encrypt(
-		JSON.stringify(sessionData),
-		process.env.SECRET_KEY as string
-	).toString();
-	cookies().set("session", encryptedSessionData, {
-		httpOnly: true,
-		maxAge: 60 * 60 * 24 * 7,
-		path: "/",
-	});
-}
 
 export async function signup(
 	prevState: any,
@@ -55,19 +49,24 @@ export async function login(
 	prevState: any,
 	formData: FormData
 ) {
-	try {
-		const tokenRes = await fetch(`${API_BASE_URL}/token`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-			},
-			body: formData,
-		});
-		const token = await tokenRes.json();
-		return token;
-	} catch (error) {
-		console.log(error);
+	const res = await fatch(`${API_BASE_URL}/token`, {
+		method: "POST",
+		body: formData,
+	});
+
+	const userAuth = await res.json();
+	if (res.ok && userAuth.token) {
+		const session = await getServerSession(authOptions);
+
+		console.log(session);
+
+		if (session) {
+			session.user = userAuth;
+			return session;
+		}
 	}
+
+	return prevState;
 }
 
 export async function postRoc(formData: FormData) {

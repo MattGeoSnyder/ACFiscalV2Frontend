@@ -9,7 +9,7 @@ import { ACHCredit } from "@/app/types";
 import { ACHClaimButton } from "@/components/ach/ACHClaimButton";
 
 export function ACHCreditsTableBody({
-	credits,
+	credits = [],
 }: {
 	credits: ACHCredit[];
 }) {
