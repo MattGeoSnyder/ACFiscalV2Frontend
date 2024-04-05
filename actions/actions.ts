@@ -3,8 +3,7 @@ import { API_BASE_URL } from "@/app/constants";
 import { cookies } from "next/headers";
 import { getServerSession } from "next-auth/next";
 import { fatch } from "@/lib/helpers/fatch";
-import { authOptions } from "@/app/auth/[...nextauth]/routes";
-import { POST } from "@/app/auth/[...nextauth]/routes";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 export type UserAuth = {
 	token: string;

@@ -8,6 +8,7 @@ import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { fatch } from "@/lib/helpers/fatch";
 import { Session } from "next-auth";
+import { redirect } from "next/navigation";
 
 interface UserAuth extends User {
 	token: string;
@@ -29,11 +30,20 @@ export const authOptions = {
 				password: { label: "Password", type: "password" },
 			},
 			async authorize(credentials) {
+				const formData = new FormData();
+				formData.append(
+					"username",
+					credentials?.username as string
+				);
+				formData.append(
+					"password",
+					credentials?.password as string
+				);
 				const res = await fatch(
-					"http://localhost:3000/auth/login",
+					"http://localhost:8000/token",
 					{
 						method: "POST",
-						body: JSON.stringify(credentials),
+						body: formData,
 					}
 				);
 				const userAuth: UserAuth = await res.json();
@@ -45,6 +55,7 @@ export const authOptions = {
 			},
 		}),
 	],
+	secret: process.env.NEXTAUTH_SECRET,
 	callbacks: {
 		async jwt({ token, account, profile }: any) {
 			if (account) {
