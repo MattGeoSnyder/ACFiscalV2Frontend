@@ -2,24 +2,17 @@ import type {
 	NextRequest,
 	NextResponse,
 } from "next/server";
-import type { User, DefaultSession } from "next-auth";
+import type {
+	User,
+	DefaultSession,
+	Account,
+	Session,
+} from "next-auth";
 import type { JWT } from "next-auth/jwt";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { fatch } from "@/lib/helpers/fatch";
-import { Session } from "next-auth";
 import { redirect } from "next/navigation";
-
-interface UserAuth extends User {
-	token: string;
-	type: string;
-	user: {
-		id: number;
-		name: string;
-		departmentId: number;
-		role: string[];
-	};
-}
 
 export const authOptions = {
 	providers: [
@@ -46,8 +39,8 @@ export const authOptions = {
 						body: formData,
 					}
 				);
-				const userAuth: UserAuth = await res.json();
-				if (res.ok && userAuth.token) {
+				const userAuth: User = await res.json();
+				if (res.ok && userAuth) {
 					return userAuth;
 				}
 
@@ -57,9 +50,12 @@ export const authOptions = {
 	],
 	secret: process.env.NEXTAUTH_SECRET,
 	callbacks: {
-		async jwt({ token, account, profile }: any) {
-			if (account) {
-				token.user = account.user;
+		async jwt({ token, user }: { token: JWT; user: User }) {
+			if (user) {
+				token = {
+					...token,
+					...user,
+				};
 			}
 			return token;
 		},
