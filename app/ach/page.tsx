@@ -7,6 +7,9 @@ import ACHClaimedTable from "@/components/ach/ACHClaimedTable";
 import { ACHCreditsTableLoading } from "@/components/ach/ACHCreditsTableLoading";
 import { Suspense } from "react";
 import { ErrorBoundary } from "next/dist/client/components/error-boundary";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { fatch } from "@/lib/helpers/fatch";
 
 type SearchParams = {
 	[key: string]: string | string[] | undefined;
@@ -17,6 +20,9 @@ interface PageProps {
 }
 
 async function fetchOutstandingACHCredits(
+	reqOptions: {
+		[key: string]: string | { [key: string]: string };
+	},
 	params: URLSearchParams,
 	limit: number = 10,
 	outStanding: boolean = true
@@ -24,7 +30,7 @@ async function fetchOutstandingACHCredits(
 	params.append("outstanding", outStanding.toString());
 	params.append("limit", limit.toString());
 	try {
-		const res = await fetch(
+		const res = await fatch(
 			`${API_BASE_URL}/ach?${params.toString()}`,
 			{
 				cache: "no-store",
@@ -45,7 +51,11 @@ export default async function AchPage({
 		searchParams as { [key: string]: string }
 	);
 
+	const session = await getServerSession(authOptions);
+	const token = session?.token?.token;
+
 	const achCredits = await fetchOutstandingACHCredits(
+		{},
 		params
 	);
 
