@@ -7,8 +7,9 @@ export async function fatch(
 	init?: RequestInit
 ) {
 	const session = await getServerSession(authOptions);
+	console.log(session);
 
-	const token = session?.token?.token;
+	const token = session?.token?.access_token;
 	console.log("token", token);
 	const res = await fetch(url, {
 		...init,

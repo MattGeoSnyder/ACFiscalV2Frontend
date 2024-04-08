@@ -7,7 +7,7 @@ export async function useFatch() {
 	const router = useRouter();
 	const { data } = useSession();
 
-	const token = data?.token?.token;
+	const token = data?.token?.access_token;
 
 	const fatch = async (
 		url: URL | RequestInfo,
