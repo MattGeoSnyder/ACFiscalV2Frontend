@@ -32,7 +32,7 @@ export async function DepartmentSelect({
 	...props
 }: SelectProps) {
 	const res = await fetchDepartments();
-	const departments = res.departments;
+	const departments = res.departments ?? [];
 	return (
 		<Select {...props}>
 			<SelectTrigger className='w-[280px]'>

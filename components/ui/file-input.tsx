@@ -16,7 +16,6 @@ export function FileInput({
 	const { className, ...rest } = props;
 	const name = props.name as keyof ACHClaimFormData;
 	const roc = formState[name] as File;
-	console.log(roc);
 
 	const handleDragOver = (e: React.DragEvent) => {
 		e.preventDefault();

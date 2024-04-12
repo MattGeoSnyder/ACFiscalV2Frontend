@@ -120,3 +120,21 @@ export async function postRoc(formData: FormData) {
 	});
 	return res;
 }
+
+export async function bookRoc(formData: FormData) {
+	const res = await fatch(
+		`${API_BASE_URL}/roc/${formData.get("roc-id")}`,
+		{
+			method: "PATCH",
+			headers: {
+				Accept: "application/json",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				fund: formData.get("fund"),
+			}),
+		}
+	);
+	const message = await res.json();
+	return message;
+}

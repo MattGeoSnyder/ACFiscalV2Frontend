@@ -16,52 +16,8 @@ import { API_BASE_URL } from "@/app/constants";
 import { FileInput } from "@/components/ui/file-input";
 import { ClaimedContext } from "@/components/ach/Providers";
 import { useRouter } from "next/navigation";
-
-export async function postRoc(formData: FormData) {
-	const files = formData.getAll("roc") as File[] | null;
-
-	if (files === null) {
-		const error = "Please upload a file";
-		console.log(error);
-		return;
-	}
-
-	if (!files?.length) {
-		const error = "Please upload a file";
-		console.log(error);
-		return;
-	}
-
-	for (let file of files) {
-		if (
-			file.type !==
-			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-		) {
-			const error = "File must be an xlsx file";
-			console.log(error);
-			return;
-		}
-	}
-
-	const docs = formData.getAll("docs") as File[] | null;
-	if (docs === null) {
-		const error = "Please upload a file";
-		return;
-	}
-
-	for (let file of docs) {
-		if (
-			file.type !==
-			"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-		) {
-		}
-	}
-	const res = await fetch(`${API_BASE_URL}/roc`, {
-		method: "POST",
-		body: formData,
-	});
-	return res;
-}
+import { useFatch } from "@/lib/hooks/useFatch";
+import { formatDollars } from "@/lib/helpers/FormatDollars";
 
 interface ACHClaimFormInterface
 	extends React.FormHTMLAttributes<HTMLFormElement> {
@@ -75,6 +31,53 @@ export function ACHClaimForm({
 	setIsOpen,
 	...props
 }: ACHClaimFormInterface) {
+	const fatch = useFatch();
+	async function postRoc(formData: FormData) {
+		const files = formData.getAll("roc") as File[] | null;
+
+		if (files === null) {
+			const error = "Please upload a file";
+			console.log(error);
+			return;
+		}
+
+		if (!files?.length) {
+			const error = "Please upload a file";
+			console.log(error);
+			return;
+		}
+
+		for (let file of files) {
+			if (
+				file.type !==
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			) {
+				const error = "File must be an xlsx file";
+				console.log(error);
+				return;
+			}
+		}
+
+		const docs = formData.getAll("docs") as File[] | null;
+		if (docs === null) {
+			const error = "Please upload a file";
+			return;
+		}
+
+		for (let file of docs) {
+			if (
+				file.type !==
+				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+			) {
+			}
+		}
+		const res = await fatch(`${API_BASE_URL}/roc`, {
+			method: "POST",
+			body: formData,
+		});
+		return res;
+	}
+
 	const initialFormData = {
 		roc: null,
 		docs: [],
@@ -83,7 +86,6 @@ export function ACHClaimForm({
 
 	const { claimed, setClaimed } =
 		useContext(ClaimedContext);
-	const [isPending, startTransition] = useTransition();
 	console.log(total);
 	console.log(total * 100);
 
@@ -128,7 +130,9 @@ export function ACHClaimForm({
 			}
 		}
 		console.log(isSuccess);
-	}, [isError, isSuccess, router, setIsOpen]);
+		console.log(error);
+		console.log(data);
+	}, [isError, data, error, isSuccess, router, setIsOpen]);
 	// const handleChange = (
 	// 	e: React.ChangeEvent<HTMLInputElement>
 	// ) => {
