@@ -7,10 +7,8 @@ export async function fatch(
 	init?: RequestInit
 ) {
 	const session = await getServerSession(authOptions);
-	console.log(session);
 
 	const token = session?.token?.access_token;
-	console.log("token", token);
 	const res = await fetch(url, {
 		...init,
 		headers: {
@@ -18,13 +16,6 @@ export async function fatch(
 			Authorization: `Bearer ${token ? token : ""}`,
 		},
 	});
-
-	if (res.status === 401) {
-		redirect("/login");
-	}
-	if (res.status === 403) {
-		redirect("/ach");
-	}
 
 	return res;
 }
