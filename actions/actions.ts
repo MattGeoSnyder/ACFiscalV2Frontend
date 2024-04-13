@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { getServerSession } from "next-auth/next";
 import { fatch } from "@/lib/helpers/fatch";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { revalidatePath } from "next/cache";
 
 export type UserAuth = {
 	token: string;
@@ -135,6 +136,7 @@ export async function bookRoc(formData: FormData) {
 			}),
 		}
 	);
+	revalidatePath("/roc/review");
 	const message = await res.json();
 	return message;
 }
