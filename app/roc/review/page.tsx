@@ -26,15 +26,14 @@ async function fetchRocs(): Promise<ROC[]> {
 	params.append("limit", "10");
 	params.append("offset", "0");
 	params.append("booked", "false");
-	const res = await fatch(
+	const res = await fatch<ROC[]>(
 		`${API_BASE_URL}/roc?${params.toString()}`,
 		{
 			cache: "no-store",
 		}
 	);
 
-	const rocs = await res.json();
-	return rocs.rocs;
+	return res.rocs;
 }
 
 export default async function Page() {

@@ -11,3 +11,23 @@ export type ACHClaimFormData = {
 	docs: File[];
 	total: number;
 };
+
+export type ROCLineItem = {
+	id: string;
+	mcu: string;
+	cost_center: string;
+	object_number: string;
+	subsidiary: string;
+	subledger: string;
+	explanation: string;
+	amount_in_cents: number;
+};
+
+export type ROCDetail = {
+	id: string;
+	amount_in_cents: number;
+	user_id: string;
+	booked?: Date;
+	fund?: string;
+	line_items: ROCLineItem[];
+};
