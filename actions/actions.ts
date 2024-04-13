@@ -137,6 +137,5 @@ export async function bookRoc(formData: FormData) {
 		}
 	);
 	if (res.ok) revalidatePath("/roc/review");
-	const message = await res.json();
-	return message;
+	return res;
 }

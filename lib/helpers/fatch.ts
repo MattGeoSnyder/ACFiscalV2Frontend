@@ -2,10 +2,10 @@ import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-export async function fatch(
+export async function fatch<T>(
 	url: URL | RequestInfo,
 	init?: RequestInit
-) {
+): Promise<{ [key: string]: T }> {
 	const session = await getServerSession(authOptions);
 
 	const token = session?.token?.access_token;
@@ -17,5 +17,5 @@ export async function fatch(
 		},
 	});
 
-	return res;
+	return await res.json();
 }
