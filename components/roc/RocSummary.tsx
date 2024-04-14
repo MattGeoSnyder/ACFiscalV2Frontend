@@ -3,6 +3,7 @@ import { formatDollars } from "@/lib/helpers/FormatDollars";
 import { Button } from "@/components/ui/button";
 import { TableRow, TableCell } from "@/components/ui/table";
 import { RocAcceptDialog } from "@/components/roc/RocAcceptDialog";
+import Link from "next/link";
 
 export const RocSummary = ({ roc }: { roc: ROC }) => {
 	const options = {
@@ -25,7 +26,12 @@ export const RocSummary = ({ roc }: { roc: ROC }) => {
 			</TableCell>
 			{/* TODO: Add a link to the ROC detail page */}
 			<TableCell>
-				<a href='#'>View ROC</a>
+				<Link
+					className='underline'
+					href={`/roc/${roc.id}`}
+					target='_blank'>
+					View ROC
+				</Link>
 			</TableCell>
 			<TableCell>
 				<RocAcceptDialog rocId={roc.id} />

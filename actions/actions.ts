@@ -31,7 +31,7 @@ export async function signup(
 		last_name,
 	});
 	try {
-		const res = await fetch(`${API_BASE_URL}/signup`, {
+		const userAuth = await fetch(`${API_BASE_URL}/signup`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -39,7 +39,7 @@ export async function signup(
 			body: reqBody,
 		});
 
-		return res.json();
+		return userAuth;
 	} catch (e) {
 		console.log(e);
 	}
@@ -49,16 +49,13 @@ export async function login(
 	prevState: any,
 	formData: FormData
 ) {
-	const res = await fatch(`${API_BASE_URL}/token`, {
+	const userAuth = await fatch(`${API_BASE_URL}/token`, {
 		method: "POST",
 		body: formData,
 	});
 
-	const userAuth = await res.json();
-	if (res.ok && userAuth.token) {
+	if (userAuth.token) {
 		const session = await getServerSession(authOptions);
-
-		console.log(session);
 
 		if (session) {
 			session.user = userAuth;
