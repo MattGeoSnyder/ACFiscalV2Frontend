@@ -12,6 +12,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { fatch } from "@/lib/helpers/fatch";
 import { DataTable } from "@/components/ui/data-table";
 import { columns } from "@/app/ach/achSearchColumns";
+import { ACH_SEARCH_PAGE_SIZE } from "@/lib/constants";
 
 type SearchParams = {
 	[key: string]: string | string[] | undefined;
@@ -25,17 +26,17 @@ async function fetchOutstandingACHCredits(
 	reqOptions: {
 		[key: string]: string | { [key: string]: string };
 	},
-	params: URLSearchParams,
-	limit: number = 10
+	params: URLSearchParams
 ): Promise<ACHCredit[]> {
 	params.append("outstanding", Boolean(true).toString());
-	params.append("limit", limit.toString());
+	params.append("limit", `${ACH_SEARCH_PAGE_SIZE}`);
 	try {
 		const { ach_credits: achCredits } = await fatch<
 			ACHCredit[]
-		>(`${API_BASE_URL}/ach?${params.toString()}`, {
-			cache: "no-store",
-		});
+		>(
+			`${API_BASE_URL}/ach?${params.toString()}`,
+			reqOptions
+		);
 
 		return achCredits;
 	} catch (error) {
@@ -64,7 +65,6 @@ export default async function AchPage({
 				<Providers>
 					<ACHClaimedTable />
 					<ACHSearchForm />
-
 					<Suspense fallback={<ACHCreditsTableLoading />}>
 						<ACHCreditsTable credits={achCredits} />
 					</Suspense>

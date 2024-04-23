@@ -26,10 +26,14 @@ const nextConfig = {
 			},
 		];
 	},
-	experimental: {
-		serverActions: {
-			bodySizeLimit: "4mb",
-		},
+	async redirect() {
+		return [
+			{
+				source: "/ach",
+				destination: "/ach?limit=20&offset=0",
+				permanent: true,
+			},
+		];
 	},
 };
 
