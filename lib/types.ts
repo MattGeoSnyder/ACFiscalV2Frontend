@@ -7,7 +7,7 @@ export type ACHCredit = {
 };
 
 export type ACHClaimFormData = {
-	roc: File | null;
+	roc: File;
 	docs: File[];
 	total: number;
 };

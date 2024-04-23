@@ -14,7 +14,7 @@ import {
 } from "react";
 import ACHClaimedTable from "./ACHClaimedTable";
 import { ACHCreditsTableBody } from "./ACHCreditsTableBody";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit } from "@/lib/types";
 
 export default function ACHCreditsTable({
 	credits,

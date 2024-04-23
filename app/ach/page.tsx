@@ -1,6 +1,6 @@
 import ACHCreditsTable from "@/components/ach/ACHCreditsTable";
 import { ACHSearchForm } from "@/components/ach/ACHSearchForm";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit } from "@/lib/types";
 import { API_BASE_URL } from "@/app/constants";
 import { Providers } from "@/components/ach/Providers";
 import ACHClaimedTable from "@/components/ach/ACHClaimedTable";
@@ -10,6 +10,8 @@ import { ErrorBoundary } from "next/dist/client/components/error-boundary";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { fatch } from "@/lib/helpers/fatch";
+import { DataTable } from "@/components/ui/data-table";
+import { columns } from "@/app/ach/achSearchColumns";
 
 type SearchParams = {
 	[key: string]: string | string[] | undefined;
@@ -24,21 +26,18 @@ async function fetchOutstandingACHCredits(
 		[key: string]: string | { [key: string]: string };
 	},
 	params: URLSearchParams,
-	limit: number = 10,
-	outStanding: boolean = true
+	limit: number = 10
 ): Promise<ACHCredit[]> {
-	params.append("outstanding", outStanding.toString());
+	params.append("outstanding", Boolean(true).toString());
 	params.append("limit", limit.toString());
 	try {
-		const res = await fatch(
-			`${API_BASE_URL}/ach?${params.toString()}`,
-			{
-				cache: "no-store",
-			}
-		);
+		const { ach_credits: achCredits } = await fatch<
+			ACHCredit[]
+		>(`${API_BASE_URL}/ach?${params.toString()}`, {
+			cache: "no-store",
+		});
 
-		const achCredits = await res.json();
-		return achCredits.ach_credits;
+		return achCredits;
 	} catch (error) {
 		return [];
 	}

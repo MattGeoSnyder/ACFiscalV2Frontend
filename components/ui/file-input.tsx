@@ -1,5 +1,5 @@
 import React, { Dispatch, SetStateAction } from "react";
-import { ACHClaimFormData } from "@/app/types";
+import { ACHClaimFormData } from "@/lib/types";
 import { Card, CardContent } from "./card";
 
 interface FileInputInterface

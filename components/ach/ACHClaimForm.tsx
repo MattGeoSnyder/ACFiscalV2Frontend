@@ -6,7 +6,7 @@ import {
 	useEffect,
 	useTransition,
 } from "react";
-import { ACHClaimFormData, ACHCredit } from "@/app/types";
+import { ACHClaimFormData, ACHCredit } from "@/lib/types";
 // import { postRoc } from "@/actions/actions";
 import { Input } from "@/components/ui/input";
 import { AlertDialogDescription } from "@/components/ui/alert-dialog";

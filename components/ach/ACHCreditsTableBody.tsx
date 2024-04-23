@@ -5,7 +5,7 @@ import {
 	TableRow,
 	TableCell,
 } from "@/components/ui/table";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit } from "@/lib/types";
 import { ACHClaimButton } from "@/components/ach/ACHClaimButton";
 
 export function ACHCreditsTableBody({

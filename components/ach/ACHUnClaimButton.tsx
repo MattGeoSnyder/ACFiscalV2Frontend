@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Button } from "@/components/ui/button";
 import { ClaimedContext } from "@/components/ach/Providers";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit } from "@/lib/types";
 
 export default function ACHUnClaimButton({
 	credit,

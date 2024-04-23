@@ -7,7 +7,7 @@ import React, {
 	useState,
 } from "react";
 import { Button } from "@/components/ui/button";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit } from "@/lib/types";
 import { ClaimedContext } from "@/components/ach/Providers";
 
 interface IACHClaimButton

@@ -1,8 +1,8 @@
 import { API_BASE_URL } from "@/lib/constants";
 import { formatDollars } from "@/lib/helpers/FormatDollars";
 import { fatch } from "@/lib/helpers/fatch";
-import { ROCDetail } from "@/app/types";
-import { ROCLineItem } from "@/app/types";
+import { ROCDetail } from "@/lib/types";
+import { ROCLineItem } from "@/lib/types";
 
 export default async function Page({
 	params,

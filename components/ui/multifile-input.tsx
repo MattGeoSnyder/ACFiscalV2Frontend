@@ -8,7 +8,7 @@ import React, {
 	SetStateAction,
 } from "react";
 import { Card, CardContent } from "./card";
-import { ACHClaimFormData } from "@/app/types";
+import { ACHClaimFormData } from "@/lib/types";
 
 //TODO: this style on wrapper 'w-full min-h-[500px] absolute'
 

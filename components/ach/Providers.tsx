@@ -6,7 +6,7 @@ import React, {
 	Dispatch,
 	SetStateAction,
 } from "react";
-import { ACHCredit } from "@/app/types";
+import { ACHCredit } from "@/lib/types";
 
 export const ClaimedContext = createContext<{
 	claimed: { [key: number]: ACHCredit };
