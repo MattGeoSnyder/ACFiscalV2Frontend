@@ -1,3 +1,5 @@
+"use client";
+
 import * as SelectPrimitive from "@radix-ui/react-select";
 import { API_BASE_URL } from "@/app/constants";
 import {
@@ -10,28 +12,32 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Suspense } from "react";
+import { useFatch } from "@/lib/hooks/useFatch";
+import { useState } from "react";
 
 type Department = {
 	id: number;
 	name: string;
 };
 
-const fetchDepartments = async (): Promise<{
-	departments: Department[];
-}> => {
-	const res = await fetch(`${API_BASE_URL}/departments`);
-	return res.json();
-};
-
 interface SelectProps extends SelectPrimitive.SelectProps {
 	className?: string;
 }
 
-export async function DepartmentSelect({
+export function DepartmentSelect({
 	className = "",
 	...props
 }: SelectProps) {
-	const { departments } = await fetchDepartments();
+	const [departments, setDepartments] = useState<
+		Department[]
+	>([]);
+	const fetchDepartments = async () => {
+		const fatch = useFatch<{ departments: Department[] }>();
+		const res = await fatch(`${API_BASE_URL}/departments`);
+		setDepartments(res.departments);
+	};
+	fetchDepartments();
+
 	return (
 		<Select {...props}>
 			<SelectTrigger className='w-[280px]'>
