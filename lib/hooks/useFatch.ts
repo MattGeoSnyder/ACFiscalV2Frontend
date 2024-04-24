@@ -3,7 +3,10 @@
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
-export function useFatch() {
+export function useFatch<T>(): (
+	url: URL | RequestInfo,
+	init?: RequestInit
+) => Promise<T> {
 	const { data } = useSession();
 
 	const token = data?.token?.access_token;
@@ -11,7 +14,7 @@ export function useFatch() {
 	const fatch = async (
 		url: URL | RequestInfo,
 		init?: RequestInit
-	) => {
+	): Promise<T> => {
 		const res = await fetch(url, {
 			...init,
 			headers: {
@@ -20,7 +23,7 @@ export function useFatch() {
 			},
 		});
 
-		return res;
+		return (await res.json()) as T;
 	};
 
 	return fatch;
