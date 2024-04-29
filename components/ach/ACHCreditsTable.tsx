@@ -5,6 +5,8 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
+	TableCell,
+	TableBody,
 } from "@/components/ui/table";
 import {
 	useState,
@@ -12,9 +14,10 @@ import {
 	SetStateAction,
 	Dispatch,
 } from "react";
-import ACHClaimedTable from "./ACHClaimedTable";
-import { ACHCreditsTableBody } from "./ACHCreditsTableBody";
 import { ACHCredit } from "@/lib/types";
+import { DownloadCsvButton } from "@/components/ach/download-csv-button";
+import { ACHClaimButton } from "./ACHClaimButton";
+import { formatDollars } from "@/lib/helpers/FormatDollars";
 
 export default function ACHCreditsTable({
 	credits,
@@ -25,14 +28,37 @@ export default function ACHCreditsTable({
 		<Table>
 			<TableHeader>
 				<TableRow>
+					<TableHead>
+						<DownloadCsvButton />
+					</TableHead>
+				</TableRow>
+				<TableRow>
 					<TableHead>Claim</TableHead>
 					<TableHead>Received</TableHead>
+					<TableHead>Department</TableHead>
 					<TableHead>Fund</TableHead>
 					<TableHead>Amount</TableHead>
 					<TableHead>Description</TableHead>
 				</TableRow>
 			</TableHeader>
-			<ACHCreditsTableBody credits={credits} />
+			<TableBody>
+				{credits.map((credit: ACHCredit) => (
+					<TableRow key={credit.id}>
+						<TableCell>
+							<ACHClaimButton credit={credit} />
+						</TableCell>
+						<TableCell>
+							{new Date(credit.received).toDateString()}
+						</TableCell>
+						<TableCell>{credit.department}</TableCell>
+						<TableCell>{credit.fund}</TableCell>
+						<TableCell>
+							{formatDollars(credit.amount_in_cents)}
+						</TableCell>
+						<TableCell>{credit.description}</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
 		</Table>
 	);
 }

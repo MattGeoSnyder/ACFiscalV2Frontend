@@ -28,6 +28,8 @@ export function ACHCreditsTableBody({
 					<TableCell>
 						{new Date(credit.received).toDateString()}
 					</TableCell>
+					<TableCell>{credit.department}</TableCell>
+
 					<TableCell>{credit.fund}</TableCell>
 					<TableCell>
 						{formatter.format(credit.amount_in_cents / 100)}

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import { Suspense } from "react";
 import { useFatch } from "@/lib/hooks/useFatch";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Department = {
 	id: number;
@@ -31,12 +31,14 @@ export function DepartmentSelect({
 	const [departments, setDepartments] = useState<
 		Department[]
 	>([]);
+	const fatch = useFatch<{ departments: Department[] }>();
 	const fetchDepartments = async () => {
-		const fatch = useFatch<{ departments: Department[] }>();
 		const res = await fatch(`${API_BASE_URL}/departments`);
 		setDepartments(res.departments);
 	};
-	fetchDepartments();
+	useEffect(() => {
+		fetchDepartments();
+	}, []);
 
 	return (
 		<Select {...props}>

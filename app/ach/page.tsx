@@ -31,14 +31,12 @@ async function fetchOutstandingACHCredits(
 	params.append("outstanding", Boolean(true).toString());
 	params.append("limit", `${ACH_SEARCH_PAGE_SIZE}`);
 	try {
-		const { ach_credits: achCredits } = await fatch<
-			ACHCredit[]
-		>(
+		const res = await fatch<ACHCredit[]>(
 			`${API_BASE_URL}/ach?${params.toString()}`,
 			reqOptions
 		);
 
-		return achCredits;
+		return res.ach_credits;
 	} catch (error) {
 		return [];
 	}

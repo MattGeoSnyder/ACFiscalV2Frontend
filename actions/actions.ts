@@ -5,6 +5,7 @@ import { getServerSession } from "next-auth/next";
 import { fatch } from "@/lib/helpers/fatch";
 import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { revalidatePath } from "next/cache";
+import { ACHCredit } from "@/lib/types";
 
 export type UserAuth = {
 	token: string;
