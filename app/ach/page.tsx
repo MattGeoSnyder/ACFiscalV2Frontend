@@ -64,7 +64,10 @@ export default async function AchPage({
 					<ACHClaimedTable />
 					<ACHSearchForm />
 					<Suspense fallback={<ACHCreditsTableLoading />}>
-						<ACHCreditsTable credits={achCredits} />
+						<ACHCreditsTable
+							credits={achCredits}
+							params={params}
+						/>
 					</Suspense>
 				</Providers>
 			</div>

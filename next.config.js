@@ -1,32 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	async headers() {
-		return [
-			{
-				source: "/:path*",
-				headers: [
-					{
-						key: "Access-Control-Allow-Origin",
-						value: "*",
-					},
-					{
-						key: "Access-Control-Allow-Methods",
-						value: "GET,OPTIONS,PATCH,DELETE,POST,PUT",
-					},
-					{
-						key: "Access-Control-Allow-Headers",
-						value:
-							"X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, Observe",
-					},
-					{
-						key: "Access-Control-Allow-Credentials",
-						value: "true",
-					},
-				],
-			},
-		];
-	},
-	async redirect() {
+	async redirects() {
 		return [
 			{
 				source: "/ach",
@@ -34,6 +8,11 @@ const nextConfig = {
 				permanent: true,
 			},
 		];
+	},
+	experimental: {
+		serverComponentsExternalPackages: [
+			"@react-pdf/renderer",
+		],
 	},
 };
 

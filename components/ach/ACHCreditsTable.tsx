@@ -18,11 +18,22 @@ import { ACHCredit } from "@/lib/types";
 import { DownloadCsvButton } from "@/components/ach/download-csv-button";
 import { ACHClaimButton } from "./ACHClaimButton";
 import { formatDollars } from "@/lib/helpers/FormatDollars";
+import dynamic, { LoaderComponent } from "next/dynamic";
+
+const AchPdfDownload = dynamic(
+	() =>
+		import("./AchPdfDownload").then(
+			(mod) => mod.AchPdfDownload
+		),
+	{ ssr: false }
+);
 
 export default function ACHCreditsTable({
 	credits,
+	params,
 }: {
 	credits: ACHCredit[];
+	params: URLSearchParams;
 }) {
 	return (
 		<Table>
@@ -30,6 +41,7 @@ export default function ACHCreditsTable({
 				<TableRow>
 					<TableHead>
 						<DownloadCsvButton />
+						<AchPdfDownload params={params} />
 					</TableHead>
 				</TableRow>
 				<TableRow>
