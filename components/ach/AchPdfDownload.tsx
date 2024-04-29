@@ -11,26 +11,27 @@ import { ACHCredit } from "@/lib/types";
 import { fatch } from "@/lib/helpers/fatch";
 import { API_BASE_URL } from "@/app/constants";
 import { useState, useEffect } from "react";
-import dynamic from "next/dynamic";
+import { useFatch } from "@/lib/hooks/useFatch";
 
 function PDFDocument({
 	credits,
 }: {
 	credits: ACHCredit[];
 }) {
-	usePDF();
 	return (
 		<Document>
 			<Page>
-				{credits.map((credit: ACHCredit) => (
-					<div key={credit.id}>
-						<Text>{credit.received}</Text>
+				{/* {credits.map((credit: ACHCredit) => ( */}
+				<Text>
+					{/* <Text>{credit.received}</Text>
 						<Text>{credit.department}</Text>
 						<Text>{credit.fund}</Text>
 						<Text>{credit.amount_in_cents}</Text>
 						<Text>{credit.description}</Text>
-					</div>
-				))}
+            */}
+					This is a test.
+				</Text>
+				{/* ))} */}
 			</Page>
 		</Document>
 	);
@@ -45,15 +46,17 @@ export function AchPdfDownload({
 	searchParams.delete("limit");
 	searchParams.delete("offset");
 
+	const fatch = useFatch<ACHCredit[]>();
+
 	const [credits, setCredits] = useState<ACHCredit[]>([]);
 
 	const document = <PDFDocument credits={credits} />;
 
 	async function fetchAchCredits() {
-		const res = await fatch<ACHCredit[]>(
-			`${API_BASE_URL}/ach/search?${params.toString()}`
+		const res = await fatch(
+			`${API_BASE_URL}/ach?${searchParams.toString()}`
 		);
-		setCredits(res.ach_credits);
+		setCredits(res);
 	}
 
 	useEffect(() => {

@@ -41,6 +41,8 @@ export default function ACHCreditsTable({
 				<TableRow>
 					<TableHead>
 						<DownloadCsvButton />
+					</TableHead>
+					<TableHead>
 						<AchPdfDownload params={params} />
 					</TableHead>
 				</TableRow>
