@@ -1,6 +1,9 @@
 "use client";
 
-import { PDFDownloadLink } from "@react-pdf/renderer";
+import {
+	PDFDownloadLink,
+	StyleSheet,
+} from "@react-pdf/renderer";
 import {
 	Document,
 	Page,
@@ -8,30 +11,68 @@ import {
 	usePDF,
 } from "@react-pdf/renderer";
 import { ACHCredit } from "@/lib/types";
-import { fatch } from "@/lib/helpers/fatch";
 import { API_BASE_URL } from "@/app/constants";
 import { useState, useEffect } from "react";
 import { useFatch } from "@/lib/hooks/useFatch";
+import { formatDollars } from "@/lib/helpers/FormatDollars";
 
-function PDFDocument({
+const styles = StyleSheet.create({
+	document: {
+		fontSize: "12px",
+		height: "fit-content",
+	},
+	page: {
+		padding: "16px",
+		gap: "16px",
+		flexDirection: "column",
+	},
+	credit: {
+		alignItems: "center",
+		fontSize: "10px",
+		gap: "20px",
+		display: "flex",
+		flexDirection: "row",
+		textAlign: "justify",
+	},
+	creditItem: {
+		flex: 1,
+		marginHorizontal: "10px",
+	},
+});
+
+export function PDFDocument({
 	credits,
+	children,
 }: {
 	credits: ACHCredit[];
+	children?: React.ReactNode;
 }) {
 	return (
 		<Document>
-			<Page>
-				{/* {credits.map((credit: ACHCredit) => ( */}
-				<Text>
-					{/* <Text>{credit.received}</Text>
-						<Text>{credit.department}</Text>
-						<Text>{credit.fund}</Text>
-						<Text>{credit.amount_in_cents}</Text>
-						<Text>{credit.description}</Text>
-            */}
-					This is a test.
-				</Text>
-				{/* ))} */}
+			<Page style={styles.page}>
+				{credits.map((credit: ACHCredit) => (
+					<Text
+						style={styles.credit}
+						key={credit.id}>
+						<Text style={styles.creditItem}>
+							{`Date received: ${credit.received}`}
+						</Text>
+						<Text style={styles.creditItem}>
+							{`Fund: ${credit.fund}`}
+						</Text>
+						<Text style={styles.creditItem}>
+							{`Department: ${credit.department}`}
+						</Text>
+						<Text style={styles.creditItem}>
+							{`Amount: ${formatDollars(
+								credit.amount_in_cents
+							)}`}
+						</Text>
+						<Text style={styles.creditItem}>
+							{`Description: ${credit.description}`}
+						</Text>
+					</Text>
+				))}
 			</Page>
 		</Document>
 	);
@@ -46,7 +87,7 @@ export function AchPdfDownload({
 	searchParams.delete("limit");
 	searchParams.delete("offset");
 
-	const fatch = useFatch<ACHCredit[]>();
+	const fatch = useFatch<{ ach_credits: ACHCredit[] }>();
 
 	const [credits, setCredits] = useState<ACHCredit[]>([]);
 
@@ -56,7 +97,7 @@ export function AchPdfDownload({
 		const res = await fatch(
 			`${API_BASE_URL}/ach?${searchParams.toString()}`
 		);
-		setCredits(res);
+		setCredits(res.ach_credits);
 	}
 
 	useEffect(() => {
@@ -66,7 +107,8 @@ export function AchPdfDownload({
 	return (
 		<PDFDownloadLink
 			document={document}
-			fileName='ach-credits.pdf'
-		/>
+			fileName='ACH Report.pdf'>
+			{"Download PDF"}
+		</PDFDownloadLink>
 	);
 }
