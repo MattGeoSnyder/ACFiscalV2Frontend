@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 
 export function useFatch<T>(): (
@@ -25,6 +24,6 @@ export function useFatch<T>(): (
 
 		return (await res.json()) as T;
 	};
-
+	
 	return fatch;
 }

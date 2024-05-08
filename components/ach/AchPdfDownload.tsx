@@ -23,20 +23,26 @@ const styles = StyleSheet.create({
 	},
 	page: {
 		padding: "16px",
-		gap: "16px",
 		flexDirection: "column",
+		nthChild: {
+			marginBottom: "16px",
+		},
 	},
 	credit: {
 		alignItems: "center",
-		fontSize: "10px",
+		fontSize: "12px",
 		gap: "20px",
 		display: "flex",
 		flexDirection: "row",
 		textAlign: "justify",
+		letterSpacing: "0.5px",
 	},
 	creditItem: {
-		flex: 1,
-		marginHorizontal: "10px",
+		margin: "0 12px",
+	},
+	description: {
+		fontSize: "12px",
+		marginBottom: "16px",
 	},
 });
 
@@ -49,29 +55,31 @@ export function PDFDocument({
 }) {
 	return (
 		<Document>
-			<Page style={styles.page}>
+			<Page
+				style={styles.page}
+				debug>
 				{credits.map((credit: ACHCredit) => (
-					<Text
-						style={styles.credit}
-						key={credit.id}>
-						<Text style={styles.creditItem}>
-							{`Date received: ${credit.received}`}
+					<>
+						<Text
+							style={styles.credit}
+							key={credit.id}>
+							<Text style={styles.creditItem}>
+								{`Date received: ${credit.received.toLocaleString()}\t`}
+							</Text>
+							<Text>{`Fund: ${credit.fund}\t`}</Text>
+							<Text>
+								{`Department: ${credit.department}\t`}
+							</Text>
+							<Text>
+								{`Amount: ${formatDollars(
+									credit.amount_in_cents
+								)}\t`}
+							</Text>
 						</Text>
-						<Text style={styles.creditItem}>
-							{`Fund: ${credit.fund}`}
-						</Text>
-						<Text style={styles.creditItem}>
-							{`Department: ${credit.department}`}
-						</Text>
-						<Text style={styles.creditItem}>
-							{`Amount: ${formatDollars(
-								credit.amount_in_cents
-							)}`}
-						</Text>
-						<Text style={styles.creditItem}>
+						<Text style={styles.description}>
 							{`Description: ${credit.description}`}
 						</Text>
-					</Text>
+					</>
 				))}
 			</Page>
 		</Document>
